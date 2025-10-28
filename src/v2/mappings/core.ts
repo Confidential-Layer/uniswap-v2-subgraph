@@ -13,7 +13,7 @@ import {
 } from '../../../generated/schema'
 import { Burn, Mint, Swap, Sync, Transfer } from '../../../generated/templates/Pair/Pair'
 import { FACTORY_ADDRESS } from '../../common/chain'
-import { ADDRESS_ZERO, ALMOST_ZERO_BD, BI_18, ONE_BI, ZERO_BD } from '../../common/constants'
+import { ADDRESS_ZERO, ALMOST_ZERO_BD, BI_18, FEE_PERCENT_BI, ONE_BI, ZERO_BD } from '../../common/constants'
 import { convertTokenToDecimal, createUser } from '../../common/helpers'
 import {
   updatePairDayData,
@@ -452,11 +452,19 @@ export function handleSwap(event: Swap): void {
   token0.txCount = token0.txCount.plus(ONE_BI)
   token1.txCount = token1.txCount.plus(ONE_BI)
 
+  // update fees
+  token0.feeUSD = token0.tradeVolumeUSD.times(FEE_PERCENT_BI)
+  token0.untrackedFeeUSD = token0.untrackedVolumeUSD.times(FEE_PERCENT_BI)
+  token1.feeUSD = token0.tradeVolumeUSD.times(FEE_PERCENT_BI)
+  token1.untrackedFeeUSD = token0.untrackedVolumeUSD.times(FEE_PERCENT_BI)
+
   // update pair volume data, use tracked amount if we have it as its probably more accurate
   pair.volumeUSD = pair.volumeUSD.plus(trackedAmountUSD)
   pair.volumeToken0 = pair.volumeToken0.plus(amount0Total)
   pair.volumeToken1 = pair.volumeToken1.plus(amount1Total)
   pair.untrackedVolumeUSD = pair.untrackedVolumeUSD.plus(derivedAmountUSD)
+  pair.feeUSD = pair.volumeUSD.times(FEE_PERCENT_BI)
+  pair.untrackedFeeUSD = pair.untrackedVolumeUSD.times(FEE_PERCENT_BI)
   pair.txCount = pair.txCount.plus(ONE_BI)
   pair.save()
 
@@ -465,6 +473,8 @@ export function handleSwap(event: Swap): void {
   uniswap.totalVolumeUSD = uniswap.totalVolumeUSD.plus(trackedAmountUSD)
   uniswap.totalVolumeETH = uniswap.totalVolumeETH.plus(trackedAmountETH)
   uniswap.untrackedVolumeUSD = uniswap.untrackedVolumeUSD.plus(derivedAmountUSD)
+  uniswap.feeUSD = uniswap.totalVolumeUSD.times(FEE_PERCENT_BI)
+  uniswap.untrackedFeeUSD = uniswap.untrackedVolumeUSD.times(FEE_PERCENT_BI)
   uniswap.txCount = uniswap.txCount.plus(ONE_BI)
 
   // save entities
@@ -523,18 +533,22 @@ export function handleSwap(event: Swap): void {
   uniswapDayData.dailyVolumeUSD = uniswapDayData.dailyVolumeUSD.plus(trackedAmountUSD)
   uniswapDayData.dailyVolumeETH = uniswapDayData.dailyVolumeETH.plus(trackedAmountETH)
   uniswapDayData.dailyVolumeUntracked = uniswapDayData.dailyVolumeUntracked.plus(derivedAmountUSD)
+  uniswapDayData.dailyFeeUSD = uniswapDayData.dailyVolumeUSD.times(FEE_PERCENT_BI)
+  uniswapDayData.dailyFeeUntracked = uniswapDayData.dailyVolumeUntracked.times(FEE_PERCENT_BI)
   uniswapDayData.save()
 
   // swap specific updating for pair
   pairDayData.dailyVolumeToken0 = pairDayData.dailyVolumeToken0.plus(amount0Total)
   pairDayData.dailyVolumeToken1 = pairDayData.dailyVolumeToken1.plus(amount1Total)
   pairDayData.dailyVolumeUSD = pairDayData.dailyVolumeUSD.plus(trackedAmountUSD)
+  pairDayData.dailyFeeUSD = pairDayData.dailyVolumeUSD.times(FEE_PERCENT_BI)
   pairDayData.save()
 
   // update hourly pair data
   pairHourData.hourlyVolumeToken0 = pairHourData.hourlyVolumeToken0.plus(amount0Total)
   pairHourData.hourlyVolumeToken1 = pairHourData.hourlyVolumeToken1.plus(amount1Total)
   pairHourData.hourlyVolumeUSD = pairHourData.hourlyVolumeUSD.plus(trackedAmountUSD)
+  pairHourData.hourlyFeeUSD = pairHourData.hourlyVolumeUSD.times(FEE_PERCENT_BI)
   pairHourData.save()
 
   // swap specific updating for token0
@@ -543,6 +557,7 @@ export function handleSwap(event: Swap): void {
   token0DayData.dailyVolumeUSD = token0DayData.dailyVolumeUSD.plus(
     amount0Total.times(token0.derivedETH as BigDecimal).times(bundle.ethPrice)
   )
+  token0DayData.dailyFeeUSD = token0DayData.dailyVolumeUSD.times(FEE_PERCENT_BI)
   token0DayData.save()
 
   // swap specific updating
@@ -551,5 +566,6 @@ export function handleSwap(event: Swap): void {
   token1DayData.dailyVolumeUSD = token1DayData.dailyVolumeUSD.plus(
     amount1Total.times(token1.derivedETH as BigDecimal).times(bundle.ethPrice)
   )
+  token1DayData.dailyFeeUSD = token1DayData.dailyVolumeUSD.times(FEE_PERCENT_BI)
   token1DayData.save()
 }

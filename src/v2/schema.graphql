@@ -12,6 +12,12 @@ type UniswapFactory @entity {
   # untracked values - less confident USD scores
   untrackedVolumeUSD: BigDecimal!
 
+  # fees accumulated
+  feeUSD: BigDecimal!
+
+  # fees accumulated for untracked values
+  untrackedFeeUSD: BigDecimal!
+
   # total liquidity
   totalLiquidityUSD: BigDecimal!
   totalLiquidityETH: BigDecimal!
@@ -36,6 +42,10 @@ type Token @entity {
   tradeVolume: BigDecimal!
   tradeVolumeUSD: BigDecimal!
   untrackedVolumeUSD: BigDecimal!
+
+  # token fees
+  feeUSD: BigDecimal!
+  untrackedFeeUSD: BigDecimal!
 
   # transactions across all pairs
   txCount: BigInt!
@@ -81,6 +91,10 @@ type Pair @entity {
   volumeUSD: BigDecimal!
   untrackedVolumeUSD: BigDecimal!
   txCount: BigInt!
+
+  # lifetime fees
+  feeUSD: BigDecimal!
+  untrackedFeeUSD: BigDecimal!
 
   # creation stats
   createdAtTimestamp: BigInt!
@@ -198,6 +212,9 @@ type UniswapDayData @entity {
   dailyVolumeUSD: BigDecimal!
   dailyVolumeUntracked: BigDecimal!
 
+  dailyFeeUSD: BigDecimal!
+  dailyFeeUntracked: BigDecimal!
+
   totalVolumeETH: BigDecimal!
   totalLiquidityETH: BigDecimal!
   totalVolumeUSD: BigDecimal! # Accumulate at each trade, not just calculated off whatever totalVolume is. making it more accurate as it is a live conversion
@@ -226,6 +243,9 @@ type PairHourData @entity {
   hourlyVolumeToken1: BigDecimal!
   hourlyVolumeUSD: BigDecimal!
   hourlyTxns: BigInt!
+
+  # fee stats
+  hourlyFeeUSD: BigDecimal!
 }
 
 # Data accumulated and condensed into day stats for each exchange
@@ -251,6 +271,9 @@ type PairDayData @entity {
   dailyVolumeToken1: BigDecimal!
   dailyVolumeUSD: BigDecimal!
   dailyTxns: BigInt!
+
+  # fee stats
+  dailyFeeUSD: BigDecimal!
 }
 
 type TokenDayData @entity {
@@ -263,6 +286,9 @@ type TokenDayData @entity {
   dailyVolumeETH: BigDecimal!
   dailyVolumeUSD: BigDecimal!
   dailyTxns: BigInt!
+
+  # fee stats
+  dailyFeeUSD: BigDecimal!
 
   # liquidity stats
   totalLiquidityToken: BigDecimal!

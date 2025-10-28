@@ -1,6 +1,6 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts/index'
 
-export const FACTORY_ADDRESS = '0xB34e608E9Fc36140fD5C3741A6A40e2A7CDF8e28'
+export const FACTORY_ADDRESS = '0x2cdd116C7d0cd9dF4b51b991dc1D5Bd2e6E9e0d3'
 
 export const REFERENCE_TOKEN = '0xd9b6E8a0a8a65a8790E0dcA1E7076BE9F23063EC' // wrapped native
 

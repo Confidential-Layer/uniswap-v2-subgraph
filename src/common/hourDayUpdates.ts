@@ -29,6 +29,8 @@ export function updateUniswapDayData(event: ethereum.Event): UniswapDayData {
     uniswapDayData.totalVolumeUSD = ZERO_BD
     uniswapDayData.totalVolumeETH = ZERO_BD
     uniswapDayData.dailyVolumeUntracked = ZERO_BD
+    uniswapDayData.dailyFeeUSD = ZERO_BD
+    uniswapDayData.dailyFeeUntracked = ZERO_BD
   }
 
   uniswapDayData.totalLiquidityUSD = uniswap.totalLiquidityUSD
@@ -54,6 +56,7 @@ export function updatePairDayData(pair: Pair, event: ethereum.Event): PairDayDat
     pairDayData.dailyVolumeToken0 = ZERO_BD
     pairDayData.dailyVolumeToken1 = ZERO_BD
     pairDayData.dailyVolumeUSD = ZERO_BD
+    pairDayData.dailyFeeUSD = ZERO_BD
     pairDayData.dailyTxns = ZERO_BI
   }
 
@@ -80,6 +83,7 @@ export function updatePairHourData(pair: Pair, event: ethereum.Event): PairHourD
     pairHourData.hourlyVolumeToken0 = ZERO_BD
     pairHourData.hourlyVolumeToken1 = ZERO_BD
     pairHourData.hourlyVolumeUSD = ZERO_BD
+    pairHourData.hourlyFeeUSD = ZERO_BD
     pairHourData.hourlyTxns = ZERO_BI
   }
 
@@ -109,6 +113,7 @@ export function updateTokenDayData(token: Token, event: ethereum.Event): TokenDa
     tokenDayData.dailyVolumeToken = ZERO_BD
     tokenDayData.dailyVolumeETH = ZERO_BD
     tokenDayData.dailyVolumeUSD = ZERO_BD
+    tokenDayData.dailyFeeUSD = ZERO_BD
     tokenDayData.dailyTxns = ZERO_BI
     tokenDayData.totalLiquidityUSD = ZERO_BD
   }
