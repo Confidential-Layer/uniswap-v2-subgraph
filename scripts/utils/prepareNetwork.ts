@@ -61,7 +61,7 @@ export function validateSubgraphType(subgraphType: string) {
 }
 
 export function getSubgraphVersion(subgraphType: string) {
-  dotenv.config({ path: '.subgraph-env' })
+  dotenv.config({ path: '.env' })
   if (subgraphType === SUBGRAPH_TYPE.V2_TOKENS) {
     if (!process.env.V2_TOKEN_SUBGRAPH_VERSION) {
       throw new Error('V2_TOKEN_SUBGRAPH_VERSION must be set')
@@ -75,7 +75,7 @@ export function getSubgraphVersion(subgraphType: string) {
 }
 
 export function getSubgraphName(subgraphType: string) {
-  dotenv.config({ path: '.subgraph-env' })
+  dotenv.config({ path: '.env' })
   if (subgraphType === SUBGRAPH_TYPE.V2_TOKENS) {
     if (!process.env.V2_TOKEN_SUBGRAPH_NAME) {
       throw new Error('V2_TOKEN_SUBGRAPH_NAME must be set')
@@ -91,16 +91,14 @@ export function getSubgraphName(subgraphType: string) {
 export function getAlchemyDeploymentParams(): {
   node: string
   ipfs: string
-  deployKey: string
 } {
   dotenv.config()
-  if (!process.env.ALCHEMY_DEPLOY_URL || !process.env.ALCHEMY_IPFS_URL || !process.env.ALCHEMY_DEPLOY_KEY) {
-    throw new Error('ALCHEMY_DEPLOY_URL, ALCHEMY_IPFS_URL, and ALCHEMY_DEPLOY_KEY must be set')
+  if (!process.env.GRAPH_NODE_ENDPOINT || !process.env.IPFS_ENDPOINT) {
+    throw new Error('GRAPH_NODE_ENDPOINT and IPFS_ENDPOINT must be set')
   }
   return {
-    node: process.env.ALCHEMY_DEPLOY_URL,
-    ipfs: process.env.ALCHEMY_IPFS_URL,
-    deployKey: process.env.ALCHEMY_DEPLOY_KEY,
+    node: process.env.GRAPH_NODE_ENDPOINT,
+    ipfs: process.env.IPFS_ENDPOINT,
   }
 }
 
