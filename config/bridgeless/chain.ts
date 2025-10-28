@@ -4,7 +4,7 @@ export const FACTORY_ADDRESS = '0xB34e608E9Fc36140fD5C3741A6A40e2A7CDF8e28'
 
 export const REFERENCE_TOKEN = '0xd9b6E8a0a8a65a8790E0dcA1E7076BE9F23063EC' // wrapped native
 
-export const STABLE_TOKEN_PAIRS = [] // stable + reference token pair
+export const STABLE_TOKEN_PAIRS: Array<string> = [] // stable + reference token pair
 
 // token where amounts should contribute to tracked volume and liquidity todo
 export const WHITELIST: string[] = [
@@ -12,7 +12,7 @@ export const WHITELIST: string[] = [
   '0xe3fa12bBEA3d9d94Dc1C0C8CEa8a1246AF1cE463', // CLONE
 ]
 
-export const STABLECOINS = []
+export const STABLECOINS: Array<string> = []
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
 export const MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('10000')
