@@ -9,7 +9,6 @@ COPY abis ./abis
 COPY src ./src
 COPY scripts ./scripts
 COPY config ./config
-COPY .env ./
 COPY v2-subgraph.template.yaml ./
 COPY tsconfig.json ./
 

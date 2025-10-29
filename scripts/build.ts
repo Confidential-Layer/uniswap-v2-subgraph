@@ -23,6 +23,22 @@ async function main() {
       type: 'boolean',
       default: false,
     })
+    .option('name', {
+      alias: 'n',
+      description: 'Subgraph name',
+      type: 'string',
+      demandOption: false,
+    })
+    .option('node', {
+      description: 'Subgraph node',
+      type: 'string',
+      demandOption: false,
+    })
+    .option('ipfs', {
+      description: 'Ipfs to deploy to',
+      type: 'string',
+      demandOption: false,
+    })
     .option('subgraph-version', {
       alias: 'v',
       description: 'Version of the subgraph',
@@ -34,7 +50,11 @@ async function main() {
   validateSubgraphType(argv.subgraphType)
   await build(argv.network, argv.subgraphType)
   if (argv.deploy) {
-    await deploy(argv.subgraphType, argv.subgraphVersion)
+    if (!argv.name || !argv.node || !argv.ipfs) {
+      throw new Error('GRAPH_NAME, GRAPH_NODE_ENDPOINT and IPFS_ENDPOINT must be set')
+    }
+
+    await deploy(argv.subgraphType, argv.name, argv.node, argv.ipfs, argv.subgraphVersion)
   }
 }
 

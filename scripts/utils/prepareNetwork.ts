@@ -74,34 +74,6 @@ export function getSubgraphVersion(subgraphType: string) {
   return process.env.V2_SUBGRAPH_VERSION
 }
 
-export function getSubgraphName(subgraphType: string) {
-  dotenv.config({ path: '.subgraph-env' })
-  if (subgraphType === SUBGRAPH_TYPE.V2_TOKENS) {
-    if (!process.env.V2_TOKEN_SUBGRAPH_NAME) {
-      throw new Error('V2_TOKEN_SUBGRAPH_NAME must be set')
-    }
-    return process.env.V2_TOKEN_SUBGRAPH_NAME
-  }
-  if (!process.env.V2_SUBGRAPH_NAME) {
-    throw new Error('V2_SUBGRAPH_NAME must be set')
-  }
-  return process.env.V2_SUBGRAPH_NAME
-}
-
-export function getAlchemyDeploymentParams(): {
-  node: string
-  ipfs: string
-} {
-  dotenv.config()
-  if (!process.env.GRAPH_NODE_ENDPOINT || !process.env.IPFS_ENDPOINT) {
-    throw new Error('GRAPH_NODE_ENDPOINT and IPFS_ENDPOINT must be set')
-  }
-  return {
-    node: process.env.GRAPH_NODE_ENDPOINT,
-    ipfs: process.env.IPFS_ENDPOINT,
-  }
-}
-
 export async function prepare(network: string, subgraphName: string) {
   try {
     console.log(`preparing config for ${network} ${subgraphName} subgraph`)

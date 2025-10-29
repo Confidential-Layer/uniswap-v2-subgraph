@@ -1,7 +1,7 @@
 import { exec as execCallback } from 'child_process'
 import * as util from 'util'
 
-import { getAlchemyDeploymentParams, getSubgraphName, prepare } from './prepareNetwork'
+import { prepare } from './prepareNetwork'
 
 const exec = util.promisify(execCallback)
 
@@ -18,10 +18,7 @@ export const build = async (network, subgraphType) => {
   await exec(`graph codegen ${subgraphType}-subgraph.yaml`)
 }
 
-export const deploy = async (subgraphType, subgraphVersion) => {
-  const subgraphName = getSubgraphName(subgraphType)
-  const { node, ipfs } = getAlchemyDeploymentParams()
-
+export const deploy = async (subgraphType, subgraphName, node, ipfs, subgraphVersion) => {
   try {
     const { stdout, stderr } = await exec(
       `graph deploy --node ${node} --ipfs ${ipfs} --version-label ${subgraphVersion} ${subgraphName} ${subgraphType}-subgraph.yaml`
