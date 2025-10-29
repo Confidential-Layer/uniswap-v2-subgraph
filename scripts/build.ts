@@ -23,12 +23,18 @@ async function main() {
       type: 'boolean',
       default: false,
     })
+    .option('subgraph-version', {
+      alias: 'v',
+      description: 'Version of the subgraph',
+      type: 'string',
+      default: 'v0.0.1',
+    })
     .help().argv
   validateNetwork(argv.network)
   validateSubgraphType(argv.subgraphType)
   await build(argv.network, argv.subgraphType)
   if (argv.deploy) {
-    await deploy(argv.subgraphType)
+    await deploy(argv.subgraphType, argv.subgraphVersion)
   }
 }
 

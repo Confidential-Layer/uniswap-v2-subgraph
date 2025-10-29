@@ -18,22 +18,13 @@ export const build = async (network, subgraphType) => {
   await exec(`graph codegen ${subgraphType}-subgraph.yaml`)
 }
 
-export const deploy = async (subgraphType) => {
-  try {
-    await exec('git diff-index --quiet HEAD -- && git diff --quiet || (exit 1)')
-  } catch (e) {
-    console.log('Error: You have uncommitted changes. Please commit your changes and try again.')
-    process.exit(1)
-  }
-
-  const { stdout: gitHash } = await exec('git rev-parse --short HEAD')
-  const gitHashString = gitHash.toString().trim()
+export const deploy = async (subgraphType, subgraphVersion) => {
   const subgraphName = getSubgraphName(subgraphType)
   const { node, ipfs } = getAlchemyDeploymentParams()
 
   try {
     const { stdout, stderr } = await exec(
-      `graph deploy --node ${node} --ipfs ${ipfs} --version-label ${gitHashString} ${subgraphName} ${subgraphType}-subgraph.yaml`
+      `graph deploy --node ${node} --ipfs ${ipfs} --version-label ${subgraphVersion} ${subgraphName} ${subgraphType}-subgraph.yaml`
     )
     if (stderr.includes('Subgraph version already exists')) {
       console.log('Subgraph version already exists. Please update the version label and try again.')
