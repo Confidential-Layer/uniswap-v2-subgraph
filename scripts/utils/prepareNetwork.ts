@@ -18,6 +18,7 @@ export enum NETWORK {
   WORLDCHAIN = 'worldchain-mainnet',
   ZORA = 'zora-mainnet',
   BRIDGELESS = 'bridgeless',
+  MAINNET = 'mainnet',
 }
 
 export enum SUBGRAPH_TYPE {

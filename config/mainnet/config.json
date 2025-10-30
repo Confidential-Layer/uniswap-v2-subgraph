@@ -1,5 +1,5 @@
 {
-  "network": "bridgeless",
+  "network": "mainnet",
   "factory": "0x2cdd116C7d0cd9dF4b51b991dc1D5Bd2e6E9e0d3", 
   "startblock": "608752"
 }

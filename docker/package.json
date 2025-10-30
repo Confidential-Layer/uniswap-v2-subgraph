@@ -5,8 +5,8 @@
     "create": "graph create --node $GRAPH_NODE_ENDPOINT $GRAPH_NAME",
     "remove": "graph remove --node $GRAPH_NODE_ENDPOINT $GRAPH_NAME",
     "prepare-template": "cross-env ts-node ./scripts/build --network $NETWORK --subgraph-type v2",
-    "uni-deploy": "cross-env ts-node ./scripts/build --network $NETWORK --subgraph-type v2 --deploy --node $GRAPH_NODE_ENDPOINT --ipfs $IPFS_ENDPOINT --name $GRAPH_NAME --subgraph-version $GRAPH_VERSION",
-    "bootstrap": "npm run prepare-template && npm run uni-deploy"
+    "subgraph-v2-deploy": "cross-env ts-node ./scripts/build --network $NETWORK --subgraph-type v2 --deploy --node $GRAPH_NODE_ENDPOINT --ipfs $IPFS_ENDPOINT --name $GRAPH_NAME --subgraph-version $GRAPH_VERSION",
+    "bootstrap": "npm run create && npm run subgraph-v2-deploy"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.64.1",
