@@ -15,3 +15,4 @@ export const factoryContract = FactoryContract.bind(Address.fromString(FACTORY_A
 export const ALMOST_ZERO_BD = BigDecimal.fromString('0.000001')
 
 export const FEE_PERCENT_BI = BigDecimal.fromString('0.003')
+export const WETH_FIXED_PRICE = BigDecimal.fromString('0.33')
