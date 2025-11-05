@@ -2,11 +2,48 @@
 import { Address, BigDecimal, BigInt } from '@graphprotocol/graph-ts/index'
 
 import { Bundle, Pair, PairTokenLookup, Token } from '../../generated/schema'
-import { MINIMUM_LIQUIDITY_THRESHOLD_ETH, MINIMUM_USD_THRESHOLD_NEW_PAIRS, REFERENCE_TOKEN, WHITELIST } from './chain'
-import { ADDRESS_ZERO, ONE_BD, WETH_FIXED_PRICE, ZERO_BD } from './constants'
+import {
+  MINIMUM_LIQUIDITY_THRESHOLD_ETH,
+  MINIMUM_USD_THRESHOLD_NEW_PAIRS,
+  REFERENCE_TOKEN,
+  STABLE_TOKEN_PAIRS,
+  STABLECOINS,
+  WHITELIST,
+} from './chain'
+import { ADDRESS_ZERO, ONE_BD, ZERO_BD } from './constants'
 
 export function getEthPriceInUSD(): BigDecimal {
-  return WETH_FIXED_PRICE
+  // create an array with same length as STABLE_TOKEN_PAIRS
+  let stableTokenPairs = new Array<Pair | null>(STABLE_TOKEN_PAIRS.length)
+  let stableTokenReserves = new Array<BigDecimal>(STABLE_TOKEN_PAIRS.length)
+  let stableTokenPrices = new Array<BigDecimal>(STABLE_TOKEN_PAIRS.length)
+  let stableTokenIsToken0 = new Array<boolean>(STABLE_TOKEN_PAIRS.length)
+  let totalLiquidityETH = ZERO_BD
+  for (let i = 0; i < STABLE_TOKEN_PAIRS.length; i++) {
+    const stableTokenPair = Pair.load(STABLE_TOKEN_PAIRS[i])
+    if (stableTokenPair) {
+      stableTokenIsToken0[i] = stableTokenPair.token1 == REFERENCE_TOKEN
+      if (stableTokenIsToken0[i]) {
+        stableTokenReserves[i] = stableTokenPair.reserve1
+        stableTokenPrices[i] = stableTokenPair.token0Price
+        totalLiquidityETH = totalLiquidityETH.plus(stableTokenPair.reserve1)
+      } else {
+        stableTokenReserves[i] = stableTokenPair.reserve0
+        stableTokenPrices[i] = stableTokenPair.token1Price
+        totalLiquidityETH = totalLiquidityETH.plus(stableTokenPair.reserve0)
+      }
+    }
+    stableTokenPairs[i] = stableTokenPair
+  }
+
+  let tokenPrice = BigDecimal.fromString('0')
+  for (let i = 0; i < STABLE_TOKEN_PAIRS.length; i++) {
+    if (stableTokenPairs[i] !== null) {
+      tokenPrice = tokenPrice.plus(stableTokenPrices[i].times(safeDiv(stableTokenReserves[i], totalLiquidityETH)))
+    }
+  }
+
+  return tokenPrice
 }
 
 // return 0 if denominator is 0 in division
@@ -27,10 +64,10 @@ export function findEthPerToken(token: Token): BigDecimal {
     return ONE_BD
   }
 
-  // if (STABLECOINS.includes(token.id)) {
-  //   const bundle = Bundle.load('1')!
-  //   return safeDiv(ONE_BD, bundle.ethPrice)
-  // }
+  if (STABLECOINS.includes(token.id)) {
+    const bundle = Bundle.load('1')!
+    return safeDiv(ONE_BD, bundle.ethPrice)
+  }
 
   // loop through whitelist and check if paired with any
   for (let i = 0; i < WHITELIST.length; ++i) {

@@ -10,10 +10,10 @@ import {
   updatePairDayData,
   updatePairHourData,
   updateTokenDayData,
-  updateTokenHourData,
   updateUniswapDayData,
 } from '../../common/hourDayUpdates'
 import { findEthPerToken, getEthPriceInUSD, getTrackedLiquidityUSD, getTrackedVolumeUSD } from '../../common/pricing'
+import { updateTokenHourData } from './hourUpdates'
 import { updateTokenMinuteData } from './minuteUpdates'
 
 export function handleSync(event: Sync): void {
